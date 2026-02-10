@@ -5,23 +5,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle
 
-      - name: Grant execute permission
-        run: chmod +x gradlew
+      # Этот шаг сам установит Gradle и создаст враппер, если его нет
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.1.0 # Указываем версию здесь
+
+      - name: Generate Wrapper
+        run: gradle wrapper # Сами создаем .jar и скрипты прямо на сервере
 
       - name: Build APK
-        # Собираем всё приложение вместе с твоей папкой core
         run: ./gradlew :app:assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: FightGame_Release
+          name: FightGame_Build
           path: core/app/build/outputs/apk/debug/app-debug.apk
           
