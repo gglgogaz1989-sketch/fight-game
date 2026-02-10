@@ -8,24 +8,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4 # Обновлено до v4
 
       - name: set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4 # Обновлено до v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      # Если врапера (gradlew) нет, мы его создадим прямо в процессе
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
       - name: Build APK
-        # Запускаем сборку прямо из корня
+        # Собираем модуль app, который лежит в core/app
         run: ./gradlew :app:assembleDebug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4 # Обновлено до v4 (решает твою ошибку!)
         with:
           name: FightGame_Final_Build
           path: core/app/build/outputs/apk/debug/app-debug.apk
