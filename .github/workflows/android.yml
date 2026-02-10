@@ -12,21 +12,21 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # Этот шаг сам установит Gradle и создаст враппер, если его нет
+      # Устанавливаем актуальный Gradle автоматически
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: 8.1.0 # Указываем версию здесь
+          gradle-version: current # Использует последнюю стабильную версию
 
-      - name: Generate Wrapper
-        run: gradle wrapper # Сами создаем .jar и скрипты прямо на сервере
-
-      - name: Build APK
-        run: ./gradlew :app:assembleDebug
+      - name: Generate Wrapper and Build
+        run: |
+          gradle wrapper # Создает тот самый .jar и файлы враппера
+          chmod +x gradlew
+          ./gradlew :app:assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: FightGame_Build
+          name: FightGame_App
           path: core/app/build/outputs/apk/debug/app-debug.apk
           
