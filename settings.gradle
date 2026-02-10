@@ -1,0 +1,6 @@
+rootProject.name = "FightGameProject"
+
+// Указываем, что модуль 'app' находится глубоко в папке core
+include ':app'
+project(':app').projectDir = new File(settingsDir, 'core/app')
+
